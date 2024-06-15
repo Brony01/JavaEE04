@@ -1,0 +1,31 @@
+spring:
+  config:
+    import: "optional:configserver:http://config-service:8088"
+    activate:
+      on-profile: docker
+---
+spring:
+  application:
+    name: gateway-service
+  config:
+    import: "optional:configserver:http://localhost:8088"
+  cloud:
+    config:
+      url: http://localhost:8888
+      label: main
+    nacos:
+      discovery:
+        server-addr:127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+resiliency:
+  circuitbreaker:
+    instances:
+      default:
+        slidingWindowSize: 100
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
